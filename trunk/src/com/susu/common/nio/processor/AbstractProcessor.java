@@ -253,7 +253,7 @@ public abstract class AbstractProcessor {
 		readProcessor.start();
 		
 		logger.debug("启动业务处理线程........");
-		processors= new Processor[Runtime.getRuntime().availableProcessors()];
+		processors= new Processor[Runtime.getRuntime().availableProcessors()+1];
 		for (int i = 0; i < processors.length; i++) {
 			processors[i]= new Processor();
 			processors[i].start();
