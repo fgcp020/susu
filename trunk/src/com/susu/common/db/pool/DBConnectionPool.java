@@ -374,8 +374,8 @@ public class DBConnectionPool implements TimerTask{
 				logger.error(Utils.getExceptionStack(e));
 			}
 		}else if("killer".equals(key)) {  //定时检查Connection的数量，把不繁忙的Connection释放掉
+			connListLock.lock();
 			try {
-				connListLock.unlock();
 				while(connList.size()>minPoolSize){
 					Connection conn = connList.get(connList.size()-1);
 					if(conn!=null){
@@ -388,7 +388,9 @@ public class DBConnectionPool implements TimerTask{
 					
 				}
 			} catch (Exception e) {
-				
+				logger.error(Utils.getExceptionStack(e));
+			}finally{
+				connListLock.unlock();
 			}
 		}
 	}
