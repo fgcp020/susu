@@ -22,7 +22,9 @@ import com.susu.common.util.Utils;
  * 一个简单的数据库连接池，采用单例模式
  * 1.初始化时与数据库建立一定数量的连接
  * 2.当数据库连接数达到最大值时不再建立新的数据库连接
- * 3.当目前的所有数据库连接都处于使用状态，且数量小于最大值
+ * 3.当目前的所有数据库连接都处于使用状态，且数量小于最大值，如果有新的请求就建立一个新的数据库连接
+ * 4.如果发现有数据库连接与数据断开，那将把这个连接从连接池中移除
+ * 5.当前数据库连接数介于最大值与最小值之间，释放比较空闲的数据库连接（4个小时没有被使用的数据库连接）
  * @author zhjb2000
  *
  */
@@ -356,7 +358,6 @@ public class DBConnectionPool implements TimerTask{
 
 		if(DBurl.equals(key)){//定时重连数据库
 			if(connList.size()>=minPoolSize){
-				
 				synchronized (isTimerRunning) {
 					if(!isTimerRunning){
 						isTimerRunning=false;
